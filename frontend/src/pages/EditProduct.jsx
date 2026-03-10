@@ -2,8 +2,6 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 
-const API_URL = "https://mern-product-management-system-1.onrender.com";
-
 const EditProduct = () => {
 
   const { id } = useParams();
@@ -29,7 +27,7 @@ const EditProduct = () => {
         }
 
         const res = await axios.get(
-          `${API_URL}/api/products/${id}`,
+          `http://localhost:5000/api/products/${id}`,
           {
             headers: {
               Authorization: `Bearer ${token}`
@@ -45,7 +43,12 @@ const EditProduct = () => {
       } catch (error) {
 
         console.error(error);
-        alert("Failed to load product");
+
+        if (error.response?.status === 401) {
+          alert("Session expired. Please login again.");
+          localStorage.clear();
+          navigate("/");
+        }
 
       }
 
@@ -64,7 +67,7 @@ const EditProduct = () => {
       const token = localStorage.getItem("token");
 
       await axios.put(
-        `${API_URL}/api/products/${id}`,
+        `http://localhost:5000/api/products/${id}`,
         { name, description, price, category },
         {
           headers: {
