@@ -1,6 +1,8 @@
 import { useState } from "react";
 import axios from "axios";
 
+const API_URL = "https://mern-product-management-system-1.onrender.com";
+
 const Register = () => {
 
   const [name, setName] = useState("");
@@ -9,28 +11,32 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
 
-  e.preventDefault();
+    e.preventDefault();
 
-  try {
+    try {
 
-    await axios.post(
-      "http://localhost:5000/api/auth/register",
-      { name, email, password }
-    );
+      const response = await axios.post(
+        `${API_URL}/api/auth/register`,
+        {
+          name: name,
+          email: email,
+          password: password
+        }
+      );
 
-    alert("User Registered");
+      alert("User Registered Successfully");
 
-    window.location = "/";
+      window.location = "/";
 
-  } catch (error) {
+    } catch (error) {
 
-    alert(
-      error.response?.data?.message || "Registration failed"
-    );
+      alert(
+        error.response?.data?.message || "Registration failed"
+      );
 
-  }
+    }
 
-};
+  };
 
   return (
 
@@ -41,22 +47,30 @@ const Register = () => {
       <form onSubmit={handleSubmit}>
 
         <input
+          type="text"
           placeholder="Name"
+          value={name}
           onChange={(e) => setName(e.target.value)}
+          required
         />
 
         <input
+          type="email"
           placeholder="Email"
+          value={email}
           onChange={(e) => setEmail(e.target.value)}
+          required
         />
 
         <input
           type="password"
           placeholder="Password"
+          value={password}
           onChange={(e) => setPassword(e.target.value)}
+          required
         />
 
-        <button>Register</button>
+        <button type="submit">Register</button>
 
       </form>
 
