@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 
+const API_URL = "https://mern-product-management-system-1.onrender.com";
+
 const EditProduct = () => {
 
   const { id } = useParams();
@@ -27,7 +29,7 @@ const EditProduct = () => {
         }
 
         const res = await axios.get(
-          `http://localhost:5000/api/products/${id}`,
+          `${API_URL}/api/products/${id}`,
           {
             headers: {
               Authorization: `Bearer ${token}`
@@ -67,7 +69,7 @@ const EditProduct = () => {
       const token = localStorage.getItem("token");
 
       await axios.put(
-        `http://localhost:5000/api/products/${id}`,
+        `${API_URL}/api/products/${id}`,
         { name, description, price, category },
         {
           headers: {
@@ -83,7 +85,7 @@ const EditProduct = () => {
     } catch (error) {
 
       console.error(error);
-      alert("Update failed");
+      alert(error.response?.data?.message || "Update failed");
 
     }
 
