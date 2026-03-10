@@ -24,8 +24,6 @@ const AuthProvider = ({ children }) => {
 
     setUser(null);
 
-    window.location = "/";
-
   };
 
   return (
