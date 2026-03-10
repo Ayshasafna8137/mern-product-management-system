@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
+const API_URL = "https://mern-product-management-system-1.onrender.com";
+
 const ProductListing = () => {
 
   const [products, setProducts] = useState([]);
@@ -15,8 +17,57 @@ const ProductListing = () => {
 
       const token = localStorage.getItem("token");
 
-      const res = await axios.get(
-        "http://localhost:5000/api/products",
+      if (!token) {
+        alert("Please login first");
+        navigate("/");
+        return;
+      }
+
+      try {
+
+        const res = await axios.get(
+          `${API_URL}/api/products`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          }
+        );
+
+        setProducts(res.data);
+
+      } catch (error) {
+
+        if (error.response?.status === 401) {
+
+          alert("Session expired. Please login again.");
+
+          localStorage.clear();
+
+          navigate("/");
+
+        } else {
+
+          alert("Failed to load products");
+
+        }
+
+      }
+
+    };
+
+    fetchProducts();
+
+  }, [navigate]);
+
+  const deleteProduct = async (id) => {
+
+    const token = localStorage.getItem("token");
+
+    try {
+
+      await axios.delete(
+        `${API_URL}/api/products/${id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`
@@ -24,28 +75,13 @@ const ProductListing = () => {
         }
       );
 
-      setProducts(res.data);
+      setProducts(products.filter(p => p._id !== id));
 
-    };
+    } catch (error) {
 
-    fetchProducts();
+      alert("Delete failed");
 
-  }, []);
-
-  const deleteProduct = async (id) => {
-
-    const token = localStorage.getItem("token");
-
-    await axios.delete(
-      "http://localhost:5000/api/products/" + id,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      }
-    );
-
-    setProducts(products.filter(p => p._id !== id));
+    }
 
   };
 
