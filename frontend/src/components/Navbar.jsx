@@ -1,10 +1,19 @@
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Navbar = () => {
 
   const { user, logout } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+
+    logout();
+
+    navigate("/"); // go to login page
+
+  };
 
   return (
 
@@ -20,7 +29,7 @@ const Navbar = () => {
           <Link to="/add-product">Add Product</Link>
         )}
 
-        <button onClick={logout}>Logout</button>
+        <button onClick={handleLogout}>Logout</button>
 
       </div>
 
