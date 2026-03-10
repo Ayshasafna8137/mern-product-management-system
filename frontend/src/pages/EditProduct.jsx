@@ -18,9 +18,15 @@ const EditProduct = () => {
 
     const fetchProduct = async () => {
 
-      const token = localStorage.getItem("token");
-
       try {
+
+        const token = localStorage.getItem("token");
+
+        if (!token) {
+          alert("Please login first");
+          navigate("/");
+          return;
+        }
 
         const res = await axios.get(
           `${API_URL}/api/products/${id}`,
@@ -38,6 +44,7 @@ const EditProduct = () => {
 
       } catch (error) {
 
+        console.error(error);
         alert("Failed to load product");
 
       }
@@ -46,15 +53,15 @@ const EditProduct = () => {
 
     fetchProduct();
 
-  }, [id]);
+  }, [id, navigate]);
 
   const updateProduct = async (e) => {
 
     e.preventDefault();
 
-    const token = localStorage.getItem("token");
-
     try {
+
+      const token = localStorage.getItem("token");
 
       await axios.put(
         `${API_URL}/api/products/${id}`,
@@ -72,6 +79,7 @@ const EditProduct = () => {
 
     } catch (error) {
 
+      console.error(error);
       alert("Update failed");
 
     }
